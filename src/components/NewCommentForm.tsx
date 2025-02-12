@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { postCommentsByPostId } from '../utils/services';
+import React, { useState } from 'react';
 
 interface NewCommentProps {
   postId: number;
@@ -51,7 +50,6 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
 
     setText('');
   };
-
 
   return (
     <form data-cy="NewCommentForm" onSubmit={handleSubmit}>
