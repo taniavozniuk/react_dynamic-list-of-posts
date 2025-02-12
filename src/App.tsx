@@ -110,13 +110,7 @@ export const App = () => {
             )}
           >
             <div className="tile is-child box is-success">
-              <PostDetails
-                posts={posts}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                postId={postId?.id}
-                error={error}
-              />
+              <PostDetails posts={posts} postId={postId?.id} />
             </div>
           </div>
         </div>

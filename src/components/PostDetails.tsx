@@ -2,43 +2,63 @@ import React, { useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { NewCommentForm } from './NewCommentForm';
 import { Comment } from '../types/Comment';
-import { getCommentsByPostId } from '../utils/services';
+import { getCommentsByPostId, postCommentsByPostId } from '../utils/services';
 import { Post } from '../types/Post';
 
 interface CommentProps {
   posts: Post[];
-  postId: number | null;
-  isLoading: boolean;
-  setIsLoading: (value: boolean) => void;
-  error: string | null;
+  postId: number | undefined;
 }
 
-export const PostDetails: React.FC<CommentProps> = ({
-  postId,
-  posts,
-  error,
-  isLoading,
-  setIsLoading,
-}) => {
+export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
   const [comment, setComment] = useState<Comment[]>([]); // відображення коментарів
   const selectedPost = posts.find(post => post.id === postId); // обраний пост
+  const [commentError, setCommentError] = useState(''); // помилка
+  const [commentLoading, setCommentLoading] = useState(false); // завантаження
+  const [isFormVisiblem, setIsFormVisiblem] = useState(false); // старн форми
 
   useEffect(() => {
     if (!postId) {
       return;
     }
 
-    setIsLoading(true);
+    setCommentLoading(true);
     setComment([]);
+    setCommentError('');
+    setIsFormVisiblem(false); // ховаю форму при зміні поста
 
     getCommentsByPostId(postId)
       .then(data => {
         setComment(data);
       })
+      .catch(() => {
+        setCommentError('error');
+      })
       .finally(() => {
-        setIsLoading(false);
+        setCommentLoading(false);
       });
-  }, [postId, setIsLoading]);
+  }, [postId]);
+
+  const handleNewCommentSubmit = (newComment: {
+    name: string;
+    email: string;
+    body: string;
+  }) => {
+    const commentAdd: Comment = {
+      id: Date.now(),
+      name: newComment.name,
+      email: newComment.email,
+      body: newComment.body,
+      postId: postId!,
+    };
+
+    postCommentsByPostId(postId!, commentAdd).then(response => {
+      setComment(prevComment => [
+        ...prevComment,
+        { ...response, id: Date.now() },
+      ]);
+    });
+  };
 
   return (
     <div className="content" data-cy="PostDetails">
@@ -50,21 +70,21 @@ export const PostDetails: React.FC<CommentProps> = ({
         </div>
 
         <div className="block">
-          {isLoading && <Loader />}
+          {commentLoading && <Loader />}
 
-          {error && (
+          {commentError && (
             <div className="notification is-danger" data-cy="CommentsError">
               Something went wrong
             </div>
           )}
 
-          {comment.length === 0 && (
+          {comment.length === 0 && !commentError && !commentLoading && (
             <p className="title is-4" data-cy="NoCommentsMessage">
               No comments yet
             </p>
           )}
 
-          <p className="title is-4">Comments:</p>
+          {comment.length > 0 && <p className="title is-4">Comments:</p>}
 
           {comment.map(comments => (
             <article
@@ -92,16 +112,24 @@ export const PostDetails: React.FC<CommentProps> = ({
             </article>
           ))}
 
-          <button
-            data-cy="WriteCommentButton"
-            type="button"
-            className="button is-link"
-          >
-            Write a comment
-          </button>
+          {comment.length === 0 &&
+            !commentError &&
+            !commentLoading &&
+            !isFormVisiblem && (
+              <button
+                data-cy="WriteCommentButton"
+                type="button"
+                className="button is-link"
+                onClick={() => setIsFormVisiblem(true)}
+              >
+                Write a comment
+              </button>
+            )}
         </div>
 
-        {/* <NewCommentForm /> */}
+        {isFormVisiblem && (
+          <NewCommentForm onSubmit={handleNewCommentSubmit} postId={postId} />
+        )}
       </div>
     </div>
   );

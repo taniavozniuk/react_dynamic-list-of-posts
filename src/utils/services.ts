@@ -15,5 +15,17 @@ export const getPostByUserId = (id: number) => {
 
 //COMMENTS
 export const getCommentsByPostId = (postId: number) => {
-  return client.get<Comment[]>(`/posts?userId=${postId}`);
+  return client.get<Comment[]>(`/comments?postId=${postId}`);
+};
+
+export const postCommentsByPostId = (
+  postId: number,
+  comment: Omit<Comment, 'id'>,
+) => {
+  return client.post<Comment>(`/comments`, {
+    postId: postId,
+    name: comment.name,
+    email: comment.email,
+    body: comment.body,
+  });
 };

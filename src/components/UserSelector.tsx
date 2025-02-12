@@ -3,7 +3,7 @@ import { getUsers } from '../utils/services';
 import { User } from '../types/User';
 
 interface UserProps {
-  selectedUser: string | null;
+  selectedUser: number | null;
   handleUserSelect: (userId: number) => void;
   openUser: boolean;
   setOpenUser: React.Dispatch<React.SetStateAction<boolean>>;
