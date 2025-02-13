@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getUsers } from '../utils/services';
 import { User } from '../types/User';
+import classNames from 'classnames';
 
 interface UserProps {
   selectedUser: number | null;
@@ -18,6 +19,7 @@ export const UserSelector: React.FC<UserProps> = ({
   // setError,
 }) => {
   const [users, setUsers] = useState<User[]>([]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getUsers().then(data => {
@@ -30,10 +32,29 @@ export const UserSelector: React.FC<UserProps> = ({
     setOpenUser(prevState => !prevState);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenUser(false);
+      }
+    };
+
+    if (openUser) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openUser, setOpenUser]);
+
   return (
     <div
       data-cy="UserSelector"
-      className={`dropdown ${openUser ? 'is-active' : ''}`}
+      className={classNames('dropdown', { 'is-active': openUser })}
     >
       <div className="dropdown-trigger">
         <button
@@ -42,6 +63,7 @@ export const UserSelector: React.FC<UserProps> = ({
           aria-haspopup="true"
           aria-controls="dropdown-menu"
           onClick={toggleDropDown}
+          // onBlur={handleBlur}
         >
           {/* відобаражаю користувача */}
           <span>
@@ -64,7 +86,9 @@ export const UserSelector: React.FC<UserProps> = ({
               <a
                 key={user.id}
                 href={`#user-${user.id}`}
-                className="dropdown-item"
+                className={classNames('dropdown-item', {
+                  'is-active': selectedUser === user.id,
+                })}
                 onClick={() => handleUserSelect(user.id)}
               >
                 {user.name}

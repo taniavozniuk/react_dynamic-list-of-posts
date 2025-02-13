@@ -42,8 +42,8 @@ export const PostsList: React.FC<PostProps> = ({
                 <button
                   type="button"
                   data-cy="PostButton"
-                  className={classNames('button', 'is-light', {
-                    'is-link': selectedPosts?.id === post.id,
+                  className={classNames('button', 'is-link', {
+                    'is-light': selectedPosts?.id !== post.id,
                   })}
                   onClick={() => {
                     setSelectedPosts(

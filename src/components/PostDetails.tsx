@@ -57,6 +57,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
         ...prevComment,
         { ...response, id: Date.now() },
       ]);
+      setIsFormVisiblem(false);
     });
   };
 
@@ -112,23 +113,23 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
             </article>
           ))}
 
-          {comment.length === 0 &&
-            !commentError &&
-            !commentLoading &&
-            !isFormVisiblem && (
-              <button
-                data-cy="WriteCommentButton"
-                type="button"
-                className="button is-link"
-                onClick={() => setIsFormVisiblem(true)}
-              >
-                Write a comment
-              </button>
-            )}
+          {!commentError && !commentLoading && (
+            <button
+              data-cy="WriteCommentButton"
+              type="button"
+              className="button is-link"
+              onClick={() => setIsFormVisiblem(true)}
+            >
+              Write a comment
+            </button>
+          )}
         </div>
 
         {isFormVisiblem && (
-          <NewCommentForm onSubmit={handleNewCommentSubmit} postId={postId} />
+          <NewCommentForm
+            onSubmit={handleNewCommentSubmit}
+            postId={postId || 0}
+          />
         )}
       </div>
     </div>
