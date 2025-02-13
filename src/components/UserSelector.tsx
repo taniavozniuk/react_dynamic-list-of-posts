@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getUsers } from '../utils/services';
 import { User } from '../types/User';
 import classNames from 'classnames';
@@ -19,7 +19,7 @@ export const UserSelector: React.FC<UserProps> = ({
   // setError,
 }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  // const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getUsers().then(data => {
@@ -34,22 +34,38 @@ export const UserSelector: React.FC<UserProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (!(event.target as HTMLElement).closest('.dropdown')) {
         setOpenUser(false);
       }
     };
 
     if (openUser) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [openUser, setOpenUser]);
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       dropdownRef.current &&
+  //       !dropdownRef.current.contains(event.target as Node)
+  //     ) {
+  //       setOpenUser(false);
+  //     }
+  //   };
+
+  //   if (openUser) {
+  //     document.addEventListener('mousedown', handleClickOutside);
+  //   }
+
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [openUser, setOpenUser]);
 
   return (
     <div
