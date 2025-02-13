@@ -91,7 +91,7 @@ export const App = () => {
                 {posts.length > 0 && (
                   <PostsList
                     posts={posts}
-                    setSelectedPosts={setPostId}
+                    setSelectedPost={setPostId}
                     selectedPosts={postId}
                     isLoading={isLoading}
                   />

@@ -19,7 +19,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
   const selectedPost = posts.find(post => post.id === postId); // обраний пост
   const [commentError, setCommentError] = useState(''); // помилка
   const [commentLoading, setCommentLoading] = useState(false); // завантаження
-  const [isFormVisiblem, setIsFormVisiblem] = useState(false); // старн форми
+  const [isFormVisible, setisFormVisible] = useState(false); // старн форми
 
   useEffect(() => {
     if (!postId) {
@@ -31,7 +31,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
     setCommentLoading(true);
     setComment([]);
     setCommentError('');
-    setIsFormVisiblem(false); // ховаю форму при зміні поста
+    setisFormVisible(false); // ховаю форму при зміні поста
 
     getCommentsByPostId(postId)
       .then(data => {
@@ -131,25 +131,19 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
             </article>
           ))}
 
-          {!commentError && !commentLoading && !isFormVisiblem && (
+          {!commentError && !commentLoading && !isFormVisible && (
             <button
               data-cy="WriteCommentButton"
               type="button"
               className="button is-link"
-              onClick={() => setIsFormVisiblem(true)}
+              onClick={() => setisFormVisible(true)}
             >
               Write a comment
             </button>
           )}
         </div>
 
-        {isFormVisiblem && (
-          <NewCommentForm
-            onSubmit={handleNewCommentSubmit}
-            postId={postId || 0}
-            commentLoading={commentLoading}
-          />
-        )}
+        {isFormVisible && <NewCommentForm onSubmit={handleNewCommentSubmit} />}
       </div>
     </div>
   );

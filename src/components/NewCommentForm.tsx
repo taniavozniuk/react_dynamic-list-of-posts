@@ -2,9 +2,7 @@ import classNames from 'classnames';
 import React, { useState } from 'react';
 
 interface NewCommentProps {
-  postId: number;
   onSubmit: (newComment: { name: string; email: string; body: string }) => void;
-  commentLoading: boolean;
 }
 
 export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {

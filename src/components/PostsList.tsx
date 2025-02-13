@@ -5,13 +5,13 @@ import classNames from 'classnames';
 
 interface PostProps {
   posts: Post[];
-  setSelectedPosts: (post: Post | null) => void;
+  setSelectedPost: (post: Post | null) => void;
   selectedPosts: Post | null;
   isLoading: boolean;
 }
 
 export const PostsList: React.FC<PostProps> = ({
-  setSelectedPosts,
+  setSelectedPost,
   posts,
   selectedPosts,
 }) => {
@@ -41,7 +41,7 @@ export const PostsList: React.FC<PostProps> = ({
                     'is-light': selectedPosts?.id !== post.id,
                   })}
                   onClick={() => {
-                    setSelectedPosts(
+                    setSelectedPost(
                       selectedPosts?.id === post.id ? null : post,
                     );
                   }}
