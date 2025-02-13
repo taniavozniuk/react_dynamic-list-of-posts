@@ -21,7 +21,6 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
   const [hasTextError, setHasTextError] = useState(false);
 
   const [formLoading, setFormLoading] = useState(false);
-  // const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const handleNameChange = (value: string) => {
     setName(value);
@@ -38,7 +37,7 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
     setHasTextError(false);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     setHasNameError(!name);
@@ -49,13 +48,14 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
       return;
     }
 
-    setFormLoading(true);
+    try {
+      setFormLoading(true);
 
-    onSubmit({ name, email, body: text });
-
-    setText('');
-
-    setFormLoading(false);
+      await onSubmit({ name, email, body: text });
+      setText('');
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   const handleClearButton = () => {
@@ -114,7 +114,7 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
 
         <div className="control has-icons-left has-icons-right">
           <input
-            type="text"
+            type="email"
             name="email"
             id="comment-author-email"
             placeholder="email@test.com"
@@ -157,7 +157,6 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
             className={`textarea ${hasTextError ? 'is-danger' : ''}`}
             value={text}
             onChange={e => handleTextChange(e.target.value)}
-            // style={{ height: '104px', width: '500px' }}
           />
         </div>
 

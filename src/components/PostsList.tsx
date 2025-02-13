@@ -14,15 +14,10 @@ export const PostsList: React.FC<PostProps> = ({
   setSelectedPosts,
   posts,
   selectedPosts,
-  // isLoading,
 }) => {
-  // const [postsLoading, setPostsLoading] = useState<boolean>(false);
-
   return (
     <div data-cy="PostsList">
       <p className="title">Posts:</p>
-
-      {/* {isLoading && <Loader />} */}
 
       <table className="table is-fullwidth is-striped is-hoverable is-narrow">
         <thead>
@@ -61,5 +56,3 @@ export const PostsList: React.FC<PostProps> = ({
     </div>
   );
 };
-
-//ds

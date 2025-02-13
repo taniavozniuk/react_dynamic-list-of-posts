@@ -16,10 +16,8 @@ export const UserSelector: React.FC<UserProps> = ({
   handleUserSelect,
   openUser,
   setOpenUser,
-  // setError,
 }) => {
   const [users, setUsers] = useState<User[]>([]);
-  // const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getUsers().then(data => {
@@ -27,7 +25,6 @@ export const UserSelector: React.FC<UserProps> = ({
     });
   }, []);
 
-  // перемикаю статус
   const toggleDropDown = () => {
     setOpenUser(prevState => !prevState);
   };
@@ -48,25 +45,6 @@ export const UserSelector: React.FC<UserProps> = ({
     };
   }, [openUser, setOpenUser]);
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       dropdownRef.current &&
-  //       !dropdownRef.current.contains(event.target as Node)
-  //     ) {
-  //       setOpenUser(false);
-  //     }
-  //   };
-
-  //   if (openUser) {
-  //     document.addEventListener('mousedown', handleClickOutside);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [openUser, setOpenUser]);
-
   return (
     <div
       data-cy="UserSelector"
@@ -79,9 +57,7 @@ export const UserSelector: React.FC<UserProps> = ({
           aria-haspopup="true"
           aria-controls="dropdown-menu"
           onClick={toggleDropDown}
-          // onBlur={handleBlur}
         >
-          {/* відобаражаю користувача */}
           <span>
             {selectedUser
               ? users.find(user => user.id === Number(selectedUser))?.name ||

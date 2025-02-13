@@ -45,7 +45,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
       });
   }, [postId]);
 
-  const handleNewCommentSubmit = (newComment: {
+  const handleNewCommentSubmit = async (newComment: {
     name: string;
     email: string;
     body: string;
@@ -58,12 +58,11 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
       postId: postId!,
     };
 
-    postCommentsByPostId(postId!, commentAdd).then(response => {
+    await postCommentsByPostId(postId!, commentAdd).then(response => {
       setComment(prevComment => [
         ...prevComment,
         { ...response, id: Date.now() },
       ]);
-      setIsFormVisiblem(false);
     });
   };
 
