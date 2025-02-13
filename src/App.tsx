@@ -24,6 +24,7 @@ export const App = () => {
     setSelectedUser(userId);
     setOpenUser(false);
     setPostId(null);
+    setPosts([]);
   };
 
   useEffect(() => {
@@ -110,7 +111,7 @@ export const App = () => {
             )}
           >
             <div className="tile is-child box is-success">
-              <PostDetails posts={posts} postId={postId?.id} />
+              {postId && <PostDetails posts={posts} postId={postId?.id} />}
             </div>
           </div>
         </div>

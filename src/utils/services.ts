@@ -29,3 +29,7 @@ export const postCommentsByPostId = (
     body: comment.body,
   });
 };
+
+export const deleteCommentsByPostId = (commentId: number) => {
+  return client.delete(`/comments/${commentId}`);
+};

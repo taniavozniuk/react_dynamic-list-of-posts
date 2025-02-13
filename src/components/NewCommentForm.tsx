@@ -1,8 +1,10 @@
+import classNames from 'classnames';
 import React, { useState } from 'react';
 
 interface NewCommentProps {
   postId: number;
   onSubmit: (newComment: { name: string; email: string; body: string }) => void;
+  commentLoading: boolean;
 }
 
 export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
@@ -18,6 +20,7 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
   const [text, setText] = useState('');
   const [hasTextError, setHasTextError] = useState(false);
 
+  const [formLoading, setFormLoading] = useState(false);
   // const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const handleNameChange = (value: string) => {
@@ -46,9 +49,23 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
       return;
     }
 
+    setFormLoading(true);
+
     onSubmit({ name, email, body: text });
 
     setText('');
+
+    setFormLoading(false);
+  };
+
+  const handleClearButton = () => {
+    setText('');
+    setEmail('');
+    setName('');
+
+    setHasNameError(false);
+    setHasEmailError(false);
+    setHasTextError(false);
   };
 
   return (
@@ -153,14 +170,23 @@ export const NewCommentForm: React.FC<NewCommentProps> = ({ onSubmit }) => {
 
       <div className="field is-grouped">
         <div className="control">
-          <button type="submit" className="button is-link ">
+          <button
+            type="submit"
+            className={classNames('button is-link', {
+              'is-loading': formLoading,
+            })}
+          >
             Add
           </button>
         </div>
 
         <div className="control">
           {/* eslint-disable-next-line react/button-has-type */}
-          <button type="reset" className="button is-link is-light">
+          <button
+            type="reset"
+            className="button is-link is-light"
+            onClick={handleClearButton}
+          >
             Clear
           </button>
         </div>

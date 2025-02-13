@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { NewCommentForm } from './NewCommentForm';
 import { Comment } from '../types/Comment';
-import { getCommentsByPostId, postCommentsByPostId } from '../utils/services';
+import {
+  deleteCommentsByPostId,
+  getCommentsByPostId,
+  postCommentsByPostId,
+} from '../utils/services';
 import { Post } from '../types/Post';
 
 interface CommentProps {
@@ -19,6 +23,8 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
 
   useEffect(() => {
     if (!postId) {
+      setComment([]);
+
       return;
     }
 
@@ -59,6 +65,18 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
       ]);
       setIsFormVisiblem(false);
     });
+  };
+
+  const handleDeleteComment = (commentId: number) => {
+    deleteCommentsByPostId(commentId)
+      .then(() => {
+        setComment(prevComment =>
+          prevComment.filter(comments => comments.id !== commentId),
+        );
+      })
+      .catch(() => {
+        setCommentError('Error');
+      });
   };
 
   return (
@@ -102,6 +120,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
                   type="button"
                   className="delete is-small"
                   aria-label="delete"
+                  onClick={() => handleDeleteComment(comments.id)}
                 >
                   delete button
                 </button>
@@ -113,7 +132,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
             </article>
           ))}
 
-          {!commentError && !commentLoading && (
+          {!commentError && !commentLoading && !isFormVisiblem && (
             <button
               data-cy="WriteCommentButton"
               type="button"
@@ -129,6 +148,7 @@ export const PostDetails: React.FC<CommentProps> = ({ postId, posts }) => {
           <NewCommentForm
             onSubmit={handleNewCommentSubmit}
             postId={postId || 0}
+            commentLoading={commentLoading}
           />
         )}
       </div>
